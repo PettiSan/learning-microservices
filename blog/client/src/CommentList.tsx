@@ -27,11 +27,6 @@ const CommentList = (props: CommentListProps) => {
     fetchData();
   }, []);
 
-  console.log(
-    "🚀 ~ file: CommentList.tsx ~ line 15 ~ CommentList ~ comments",
-    comments
-  );
-
   const renderedComments = comments?.map((comment) => {
     return <li key={comment.id}>{comment.text}</li>;
   });

@@ -1,1 +1,24 @@
 /.vscode
+# Created by https://www.toptal.com/developers/gitignore/api/react
+# Edit at https://www.toptal.com/developers/gitignore?templates=react
+
+### react ###
+/blog/client/.DS_*
+/blog/client/*.log
+/blog/client/logs
+/blog/client/**/*.backup.*
+/blog/client/**/*.back.*
+
+/blog/client/node_modules
+/blog/client/bower_components
+
+/blog/client/*.sublime*
+
+/blog/client/psd
+/blog/client/thumb
+/blog/client/sketch
+
+/blog/posts/node_modules
+/blog/comments/node_modules
+
+# End of https://www.toptal.com/developers/gitignore/api/react
