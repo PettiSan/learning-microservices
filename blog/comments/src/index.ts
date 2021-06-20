@@ -9,9 +9,16 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+enum StatusEnum {
+  Aproved = "aproved",
+  Rejected = "rejected",
+  Pending = "pending",
+}
+
 type CommentType = {
   id: any;
   text: string;
+  status: StatusEnum;
 };
 
 type CommentsType = {
@@ -19,12 +26,24 @@ type CommentsType = {
   comments: CommentType[];
 };
 
-let commentsById: CommentsType[] = [];
+type CommentsModerateType = {
+  type: "CommentModerated";
+  data: CommentModerateType;
+};
+
+type CommentModerateType = {
+  id: any;
+  text: string;
+  postID: any;
+  status: StatusEnum;
+};
+
+let commentsByPostId: CommentsType[] = [];
 
 app.get("/posts/:id/comments", (req, res) => {
   const id = req.params.id;
 
-  res.send(commentsById.find((v) => v.id === id)?.comments || []);
+  res.send(commentsByPostId.find((v) => v.id === id)?.comments || []);
 });
 
 app.post("/posts/:id/comments", async (req, res) => {
@@ -32,12 +51,16 @@ app.post("/posts/:id/comments", async (req, res) => {
 
   const { text } = req.body;
 
-  let newComment: CommentType = { id: commentId, text };
+  let newComment: CommentType = {
+    id: commentId,
+    text,
+    status: StatusEnum.Pending,
+  };
 
-  commentsById[
-    commentsById.findIndex((v) => v.id === req.params.id)
+  commentsByPostId[
+    commentsByPostId.findIndex((v) => v.id === req.params.id)
   ]?.comments.push(newComment) ||
-    commentsById.push({ id: req.params.id, comments: [newComment] });
+    commentsByPostId.push({ id: req.params.id, comments: [newComment] });
 
   // !EventBus Service
   await axios.post("http://localhost:4005/events", {
@@ -48,13 +71,26 @@ app.post("/posts/:id/comments", async (req, res) => {
     },
   });
 
-  res.status(201).send(commentsById);
+  res.status(201).send(commentsByPostId);
 });
 
-app.post("/events", (req, res) => {
-  const { type } = req.body;
+app.post("/events", async (req, res) => {
+  const { type, data } = req.body as CommentsModerateType;
 
   console.log("Received Event: ", type);
+
+  if (type === "CommentModerated") {
+    const { id, text, status, postID } = data;
+
+    commentsByPostId
+      .find((p) => p.id === postID)
+      ?.comments.find((c) => c.id === id)?.status === status;
+
+    await axios.post("http://localhost:4005/events", {
+      type: "CommentUpdated",
+      data,
+    });
+  }
 
   res.send({});
 });
