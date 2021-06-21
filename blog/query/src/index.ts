@@ -15,7 +15,7 @@ type PostsType = {
 };
 
 enum StatusEnum {
-  Aproved = "aproved",
+  Approved = "approved",
   Rejected = "rejected",
   Pending = "pending",
 }

@@ -8,7 +8,7 @@ type ModerationType = {
 };
 
 enum StatusEnum {
-  Aproved = "aproved",
+  Approved = "approved",
   Rejected = "rejected",
   Pending = "pending",
 }
@@ -34,7 +34,7 @@ app.post("/events", async (req, res) => {
 
     const status = data.text.includes("orange")
       ? StatusEnum.Rejected
-      : StatusEnum.Aproved;
+      : StatusEnum.Approved;
 
     await axios.post("http://localhost:4005/events", {
       type: "CommentModerated",

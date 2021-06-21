@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 enum StatusEnum {
-  Aproved = "aproved",
+  Approved = "approved",
   Rejected = "rejected",
   Pending = "pending",
 }

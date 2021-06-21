@@ -1,5 +1,5 @@
 enum StatusEnum {
-  Aproved = "aproved",
+  Approved = "approved",
   Rejected = "rejected",
   Pending = "pending",
 }
@@ -16,7 +16,7 @@ const CommentList = (props: { comments: CommentType[] }) => {
   const renderedComments = comments?.map((comment) => {
     return (
       <li key={comment.id}>
-        {comment.status === StatusEnum.Aproved
+        {comment.status === StatusEnum.Approved
           ? comment.text
           : comment.status === StatusEnum.Rejected
           ? "Rejeitado"
